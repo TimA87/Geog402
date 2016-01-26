@@ -2,6 +2,10 @@ library(openair)
 library(ggplot2)
 library(lubridate)
 
+# set working directory
+dir <- "D:/school/geog402"
+setwd(dir)
+
 # load data
 file <- "pmdata.Rdata"
 load(file)
@@ -87,10 +91,22 @@ pollutionRose(df, pollutant = "pm25",statistic="prop.mean",type=c("hours","seaso
 # subset data to get only weather variables
 df <- df[as.character(df$weather) != "",] 
 
+
+occ <- ddply(df, .(weather), summarise, length(weather))
+colnames(occ) <- c("weather","freq")
+occ <- occ[occ$freq > 100,]
+
+df <- df[df$weather %in% occ$weather,]
+
+df$weather <- factor(df$weather,
+                        levels = c("Clear", "Mainly Clear", "Mostly Cloudy", "Cloudy",
+                                   "Rain", "Rain Showers", "Rain,Fog","Rain Showers,Fog",
+                                   "Fog"))
+
 # weather distribution
 ggplot(data = df, aes(factor(weather),pm25)) +
   geom_boxplot(fill = "red", colour = "black",outlier.colour = "firebrick4",alpha = 0.5) +
-  #facet_wrap(~ season,ncol=6,scales="free") +
+  facet_wrap(~ seasons,ncol=4,scales="free") +
   xlab("Hour") +
   ylab("PM2.5") + 
   theme(plot.title = element_text(color="firebrick4", size=14, face="bold.italic")) +
