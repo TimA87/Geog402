@@ -114,7 +114,7 @@ ggplot(data = df, aes(factor(weather),pm25)) +
   geom_boxplot(fill = "red", colour = "black",outlier.colour = "firebrick4",alpha = 0.5) +
   facet_wrap(~ seasons,ncol=4,scales="free") +
   xlab("Hour") +
-  ylab("PM2.5") + 
+  ylab(expression(paste(PM[2.5]," (µg /",m^3,")", sep=""))) +  
   theme(plot.title = element_text(color="firebrick4", size=14, face="bold.italic")) +
   theme(plot.title=element_text(size=15, vjust=1.5)) +
   theme(strip.background = element_rect(fill = "cornsilk", color = "grey20")) +
