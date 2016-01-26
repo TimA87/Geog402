@@ -91,13 +91,19 @@ pollutionRose(df, pollutant = "pm25",statistic="prop.mean",type=c("hours","seaso
 # subset data to get only weather variables
 df <- df[as.character(df$weather) != "",] 
 
-
+# subset so only weather shows up when it has occurred more than
+# 100 times throughout all the hours of a year to get rid of
+# one hit wonders
 occ <- ddply(df, .(weather), summarise, length(weather))
 colnames(occ) <- c("weather","freq")
+
+# set the frequency to 100
 occ <- occ[occ$freq > 100,]
 
+# subset the data
 df <- df[df$weather %in% occ$weather,]
 
+# set order of weather
 df$weather <- factor(df$weather,
                         levels = c("Clear", "Mainly Clear", "Mostly Cloudy", "Cloudy",
                                    "Rain", "Rain Showers", "Rain,Fog","Rain Showers,Fog",
